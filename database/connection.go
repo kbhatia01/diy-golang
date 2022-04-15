@@ -7,7 +7,7 @@ import (
 )
 
 func Init() *gorm.DB {
-	dbUrl := "postgres://postgres:karan@localhost:5432/gorm?sslmode=disable"
+	dbUrl := "postgres://postgres:karan@localhost:5432/test?sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
 	if err != nil {
 		panic(err)
