@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"diy/pkg/mocks"
 	"diy/pkg/models"
 	"encoding/json"
 	"github.com/gorilla/mux"
@@ -13,7 +12,13 @@ import (
 func (h handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(mocks.Products)
+	var products []models.Product
+	if result := h.Db.Find(&products); result.Error != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(result.Error)
+		return
+	}
+	json.NewEncoder(w).Encode(products)
 }
 
 //add procuts to mocks json
@@ -32,26 +37,32 @@ func (h handler) AddProduct(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	// add product to mocks
-	mocks.Products = append(mocks.Products, product)
-	w.WriteHeader(http.StatusOK)
+	// add product to database using gorm
+	err = h.Db.Create(&product).Error
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	json.NewEncoder(w).Encode("created")
 
 }
 
 func (h handler) GetProductById(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	// get product id from url
 	var_id := mux.Vars(r)["id"]
 	// string to int
 	id, _ := strconv.Atoi(var_id)
 	// find product in mocks
-	for _, product := range mocks.Products {
-		if product.Id == id {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(product)
-			return
-		}
+	var product models.Product
+	// marshal product to json
+	if result := h.Db.First(&product, id); result.Error != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(result.Error)
+		return
 	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(product)
 
 }
