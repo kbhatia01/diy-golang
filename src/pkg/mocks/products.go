@@ -1,6 +1,8 @@
 package mocks
 
-import "diy/pkg/models"
+import (
+	"diy/src/pkg/models"
+)
 
 var Products = []models.Product{
 	{

@@ -1,7 +1,7 @@
 package connection
 
 import (
-	"diy/pkg/models"
+	"diy/src/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

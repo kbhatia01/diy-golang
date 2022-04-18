@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"diy/pkg/models"
+	"diy/src/pkg/models"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
