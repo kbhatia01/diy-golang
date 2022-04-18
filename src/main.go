@@ -1,8 +1,8 @@
 package main
 
 import (
-	connection "diy/database"
-	"diy/pkg/handlers"
+	"diy/src/database"
+	"diy/src/pkg/handlers"
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
